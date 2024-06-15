@@ -19,8 +19,6 @@ I therefore connect one channel of the detector to the central pole, to allow me
 
 ![Screenshot 2024-06-15 at 21 51 59](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/d139a33b-471d-42bf-a48e-b6197c63bcca)
 
-
-
 ### High voltage side 
   
 1. D1: Since the input is AC, the IN4007 diode is required because the reverse-voltage breakdown of the Optocoupler LED is too low to act as a rectifier. For a DC application, this would still be useful protection against polarity reversal. 
@@ -32,13 +30,13 @@ I therefore connect one channel of the detector to the central pole, to allow me
 This circuit is repeated identically for the number of detector channels required. Mine has five. 
 
 ### Microprocessor
-
-I used a Wemos D1 Mini, which is ESP8266-based. It is cheap and compact. It has five readily-usable inputs - not limited by boot-time conditions and having internal pullup resistors: D1, D2, D5, D6, and D7. Fortunately, five inputs is exactly what I needed! 
-
 ![Screenshot 2024-06-15 at 20 16 16](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/9790055a-00ab-4d60-b160-613c516c233e)
 
+I used a Wemos D1 Mini, which is ESP8266-based. It is cheap and compact. It has five inputs that are not limited by flash or boot-time conditions, and which have internal pullup resistors: D1, D2, D5, D6, and D7. Fortunately, five inputs is exactly what I needed! 
 
-There are ten on the board, labelled A0 and D0 to D8. However, A0 is connected to an ADC and does not have an internal pullup resistor; D0 (GPIO16) and D8 (GPIO15) have no pullup resistor; D8 has a pull-down and must be low at boot time; D3 (GPIO0) and D4 (GPIO2) must be high during firmware programming (flash). At a push, some of those could be used provided that the boot and flash time rules are met, and external pullup resistors provided. For me, if more channels were required, I would find a processor and dev board that has them, or employ an I2C I/O expander such as the 16-channel MCP23017.
+![Screenshot 2024-06-15 at 21 53 47](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/1ce11695-a257-4ff4-a83c-5552298aeb51)
+
+If more channels were required, I would find a processor and dev board that has them, or employ an I2C I/O expander such as the 16-channel MCP23017.
 
 ## Power supply 
 For the Wemos D1 mini, a 5V power supply is most convenient. The board itself then regulates the 3V3 supply actually used by te microprocessor. 
@@ -52,7 +50,6 @@ There are however, plenty of cheap 5V power supply modules available! The power 
 I built MAVE pn a prototype board with a pre-printed pattern suitable for connecting a DIP socket for the optocouplers, and the development board via straight headers. The optocouplers could be soldered directly, but I find it convenient to be able to do circuit testing before inserting them. Isolation between the mains and low voltage areas are particularly inportant on this board! 
 
 ![IMG_9457](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/41f18da2-640d-424d-b74e-435888f453d8)  ![IMG_9458](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/c965ffdd-be82-46c3-95cb-7871a6d02e5d)
-
 
 The board fits inside a standard 25mm double pattress box with a blank front plate. These are common and cheap in the UK, visually compatible with the environment in which MAVE is to be used, and plastic, so there is no interference with the WiFi signal.     
 
@@ -70,8 +67,6 @@ Note: there cannot be any 'delayed_on' time over 20mS as the input would then ne
 The text sensors in the last section are specific to my use-case. For each of the two switches I am monitioring I deduce the position using a Lambda (C++ code).
 - Note 1: In ESPHome (unlike Home Assistant) a sensor cannot contain text, only numbers. A text sensor does map well into Home assistant, though.  
 - Note 2: A type error occurs if you try to return a text value directly from the Lambda. It ıs necessary to declare a variable with the correct type, 'std::string' then the text is cast to that type in the assignment statements.    
-
-
 
 
 
