@@ -15,7 +15,8 @@ I therefore connect one channel of the detector to the central pole, to allow me
 
 ## Schematic 
 
--- figure to follow --  
+![Screenshot 2024-06-15 at 20 52 37](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/4001253f-4eb2-40f9-b614-2a157ee027d1)
+
 
 ### High voltage side 
   
@@ -31,6 +32,9 @@ This circuit is repeated identically for the number of detector channels require
 
 I used a Wemos D1 Mini, which is ESP8266-based. It is cheap and compact. It has five readily-usable inputs - not limited by boot-time conditions and having internal pullup resistors: D1, D2, D5, D6, and D7. Fortunately, five inputs is exactly what I needed! 
 
+![Screenshot 2024-06-15 at 20 16 16](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/9790055a-00ab-4d60-b160-613c516c233e)
+
+
 There are ten on the board, labelled A0 and D0 to D8. However, A0 is connected to an ADC and does not have an internal pullup resistor; D0 (GPIO16) and D8 (GPIO15) have no pullup resistor; D8 has a pull-down and must be low at boot time; D3 (GPIO0) and D4 (GPIO2) must be high during firmware programming (flash). At a push, some of those could be used provided that the boot and flash time rules are met, and external pullup resistors provided. For me, if more channels were required, I would find a processor and dev board that has them, or employ an I2C I/O expander such as the 16-channel MCP23017.
 
 ## Power supply 
@@ -43,6 +47,9 @@ There are however, plenty of cheap 5V power supply modules available! The power 
 ## Physical build
 
 I built MAVE pn a prototype board with a pre-printed pattern suitable for connecting a DIP socket for the optocouplers, and the development board via straight headers. The optocouplers could be soldered directly, but I find it convenient to be able to do circuit testing before inserting them. Isolation between the mains and low voltage areas are particularly inportant on this board! 
+
+![IMG_9457](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/41f18da2-640d-424d-b74e-435888f453d8)  ![IMG_9458](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/c965ffdd-be82-46c3-95cb-7871a6d02e5d)
+
 
 The board fits inside a standard 25mm double pattress box with a blank front plate. These are common and cheap in the UK, visually compatible with the environment in which MAVE is to be used, and plastic, so there is no interference with the WiFi signal.     
 
