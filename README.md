@@ -10,18 +10,21 @@ It seems a simple task - detect the presence or not of a voltage; however, I fou
 
 In my case, I wanted to remotely monitor the positions of two three-positon switches, but the same circuit can be used to detect any high AC or DC voltage for any purpose. 
 
+![Screenshot 2024-06-15 at 21 42 32](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/7ed8cc02-b0df-4e5a-9ad5-7902c29e2730)
+
 The two switches in my case control a boiler - one for Hot Water (HW) and one for Central Heating (CH). The three positions are "Manual", "Off", or "Auto". The "Off" state is simply a central position in which neither of the two outer contacts are closed, there is no separate "Off" contact. 
 I therefore connect one channel of the detector to the central pole, to allow me to distinguish between "No power" and "Off": "Off" means there is power to the switch but neither of the "Manual" of "Auto" positions is live. My two switches share one power source, so I needed a total of 5 channels.  
 
-## Schematic 
+## Sensor schematic (for one channel) 
 
-![Screenshot 2024-06-15 at 20 52 37](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/4001253f-4eb2-40f9-b614-2a157ee027d1)
+![Screenshot 2024-06-15 at 21 51 59](https://github.com/AndySymons/MAVE-mains-voltage-sensor/assets/14819812/d139a33b-471d-42bf-a48e-b6197c63bcca)
+
 
 
 ### High voltage side 
   
 1. D1: Since the input is AC, the IN4007 diode is required because the reverse-voltage breakdown of the Optocoupler LED is too low to act as a rectifier. For a DC application, this would still be useful protection against polarity reversal. 
-2. L1: The indicator LED is entirely optional. I put it in as as smple way of confirming that current is flowing when a voltage is applied.
+2. L1: The indicator LED is entirely optional. I put it in as a simple way of confirming that current is flowing when a voltage is applied.
 3. R1: The 100kΩ resistor is dimensioned to set the current through the optocoupler LED (and indeed the indicator LED) at 2.3 mV for a 230V input. This is sufficient to reliably turn on the photo-transistor. It is rather low for the indicator LED, but it being dim is not important in my case. If it were, the resistor could easily be reduced by a factor of 10: 10kΩ would give a current of 23mA. The maximum for the optocoupler is 50mA. For a 110V mains supply, a resistor of 47kΩ could be used. In fact practically any voltage up to 700V (the limit of the diode) could be detected by calculating R = V / I, where I is the desired current, which should be between 0.001 (1mA) and 0.05 (50mA). 
 4. Q1 input: the cheap PC817 optocoupler is adequate here as no high frequency switching is needed. The input side LED is activated by the 2.3mA current that flows when 230V is applied to the input. In my case, the detected signals have a common Neutral line, but these could be separated too if required. 
 5. Q1 output: The cathode of the transistor side of the optocoupler is connected to a processor input that has an internal pullup resistor. The emitter is connected to the processor Ground (not to be confused with the mains Neutral or Earth!). A current on the input side pulls the input down, so the logic is inverted.
