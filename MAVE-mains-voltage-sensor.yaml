@@ -1,0 +1,148 @@
+esphome:
+  name: mave-mains-voltage-sensor
+  friendly_name: MAVE mains voltage sensor
+
+esp8266:
+  board: d1_mini
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "phHy//k/HbYAap5EVTBCUBG/hI87iuTZVxbzyzgm4q0="
+
+ota:
+  password: "49a16b5a44b4a9028ffa4ed02331539f"
+
+wifi:
+  networks:
+  - ssid: !secret wifi1_ssid
+    password: !secret wifi1_password
+  - ssid: !secret wifi2_ssid
+    password: !secret wifi2_password
+  - ssid: !secret wifi3_ssid
+    password: !secret wifi3_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Mave-Mains-Voltage-Sensor"
+    password: "9SYU26J3sdOH"
+
+captive_portal:
+    
+binary_sensor:
+  - platform: gpio
+    name: "1 Power on"
+    id: power_on
+    pin: 
+      number: D1
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    device_class: power
+    filters:
+      # digital smoothing. 'On is actually a 50Hz square wave so need at least 20ms wait
+      - delayed_off: 100ms 
+
+  - platform: gpio
+    name: "2 HW Manual"
+    id: hw_manual
+    pin: 
+      number: D5
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    device_class: power
+    filters:
+      # digital smoothing. 'On is actually a 50Hz square wave so need at least 20ms wait
+      - delayed_off: 100ms 
+
+  - platform: gpio
+    name: "3 HW Auto"
+    id: hw_auto
+    pin: 
+      number: D6
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    device_class: power
+    filters:
+      # digital smoothing. 'On is actually a 50Hz square wave so need at least 20ms wait
+      - delayed_off: 100ms 
+
+  - platform: gpio
+    name:  "4 CH Manual"
+    id: ch_manual
+    pin: 
+      number: D7
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    device_class: power
+    filters:
+      # digital smoothing. 'On is actually a 50Hz square wave so need at least 20ms wait
+      - delayed_off: 100ms 
+
+  - platform: gpio
+    name: "5 CH Auto"
+    id: ch_auto
+    pin: 
+      number: D2
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    device_class: power
+    filters:
+      # digital smoothing. 'On is actually a 50Hz square wave so need at least 20ms wait
+      - delayed_off: 100ms 
+
+# Switch position sensors 
+text_sensor:
+  - platform: template
+    name: "HW switch position"
+    id: hw_switch_position
+    icon: "mdi:electric-switch"
+    device_class: ""
+    lambda: |-
+      std::string position;
+      if (id(power_on).state == false ) {
+        position = "No power";
+      } else if ( id(hw_manual).state == true && id(hw_auto).state == false ) {
+        position = "Manual";
+      } else if ( id(hw_auto).state == true && id(hw_manual).state == false ) {
+        position = "Auto";
+      } else if ( id(hw_auto).state == false && id(hw_manual).state == false ) {
+        position = "Off";
+      } else {
+        position = "Error";
+      }
+      return position;
+    update_interval: 1s
+
+  - platform: template
+    name: "CH switch position"
+    id: ch_switch_position
+    icon: "mdi:electric-switch"
+    device_class: ""
+    lambda: |-
+      std::string position;
+      if ( id(power_on).state == false ) {
+        position =  "No power";
+      } else if ( id(ch_manual).state == true && id(ch_auto).state == false ) {
+        position =  "Manual";
+      } else if ( id(ch_auto).state == true && id(ch_manual).state == false ) {
+        position = "Auto";
+      } else if ( id(ch_auto).state == false && id(ch_manual).state == false ) {
+        position = "Off";
+      } else {
+        position = "Error";
+      }
+      return position;      
+    update_interval: 1s
